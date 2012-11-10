@@ -1,0 +1,184 @@
+우선 최근에 발간되 따끈따끈한 "코드로 알아보는 ARM 리눅스 커널"에  있는 내용을 참고하였고 설정의 편의를 위해 기록하였다. 
+
+    궁금하신 분들은 책을 구입해서 보는걸 추천한다.
+
+
+
+
+최근에 리눅스 커널소스를 볼 일이 있어서, 살펴보다가 같이 하시는 분들의 vim의 활용 모습을 보고 좀 놀랐다.
+
+ 
+
+소스 분석하려면 ctag랑 cscope사용하는건 기본이라고 해도, 생각지도 못한 다양한? 플러그인이 있었다.
+
+그 중 한분의 vim이 정말 화려했는데, 
+
+그 설정 방법이 다행히도 저 책(vim을 화려하게 사용하신 분이 책의 저자중 한분...)에 나와있었다. 
+
+아무튼, 내 분석용서버에도 적용해보니 매우 만족스러웠다. 
+
+덕분에 일일히 명령어를 사용해가면서, 화면분할하고 찾아다니는 번거로움을 덜 수 있었다. :)
+
+
+
+
+1. 분석하려는 소스는 이미 있다고 가정, ctags, cscope로 apt-get이나 패키지로 설치했다고 가정
+
+2. 소스 경로에서 make tags ARCH=arm, make cscope ARCH=arm 실행, 생성된 파일들 확인!
+
+
+
+
+3. vim플러그인으로 Source Explorer, NERD Tree, Tag List를 www.vim.org 에서 다운로드(사이트 좌측 프레임에 Scripts에서...)
+
+   그리고 Source Explorer이름이 "SrcExpl"로 변경됨
+
+
+
+
+4. 다운로드한 플러그인들을 리눅스 내 홈디렉토리에서 .vim디렉토리로 복사
+
+
+
+
+5. .vim디렉토리에 plugin디렉토리 생성, 압축된 플러그인은 압축을 풀어줌
+
+
+
+
+6. Source Explorer의 플러그인(srcexpl.vim)은 plugin디렉토리로 복사, plugin디렉토리에 3개의 플러그인 파일이 있는것을 확인
+
+
+
+
+7. 다음은 홈디렉토리에 있는 .vimrc 설정, 없으면 새로 생성함, 자세한 설정은 아래와 같음
+
+
+
+
+-----------------------------------------------------------------------------------------------------------------------
+
+
+"----------------------------------------------------------------------"
+
+" vim config
+
+"----------------------------------------------------------------------"
+
+set nu
+
+set ai
+
+set ts=4
+
+set bg=dark
+
+"----------------------------------------------------------------------"
+
+" ctags database path config
+
+"----------------------------------------------------------------------"
+
+set tags=/home/ultract/kernel_study_daejeon/src/linux-3.3.7/tags
+
+"----------------------------------------------------------------------"
+
+" cscope database path config
+
+"----------------------------------------------------------------------"
+
+set csprg=/usr/bin/cscope
+
+set csto=0
+
+set cst
+
+set nocsverb
+
+cs add /home/.../linux-3.3.7/cscope.out /home/.../linux-3.3.7
+
+set csverb
+
+"----------------------------------------------------------------------"
+
+" Tag List config
+
+"----------------------------------------------------------------------"
+
+filetype on"vim filetype on
+
+nmap <F7> :TlistToggle<CR>                 "F7 Key = Tag List Toggling
+
+let Tlist_Ctags_Cmd = "/usr/bin/ctags"    "ctags 프로그램 위치
+
+let Tlist_Inc_Winwidth = 0                        "window width change off
+
+let Tlist_Exit_OnlyWindow = 0                  "tag/file 선택 완료 시 taglist
+
+"window close = off
+
+let Tlist_Autu_Open = 0                           "vim 시작 시 window open = off
+
+let Tlist_Use_Right_Window = 1                "vim 시작 시 window open = off
+
+"----------------------------------------------------------------------"
+
+" Source Explorer config
+
+"----------------------------------------------------------------------"
+
+nmap <F8> :SrcExplToggle<CR>             "F8 Key = SrcExpl Toggling
+
+nmap <C-H> <C-W>h                            "왼쪽 창으로 이동
+
+nmap <C-J> <C-W>j                              "하단(preview) 창으로 이동
+
+nmap <C-K> <C-W>k                             "상단 창으로 이동
+
+nmap <C-L> <C-W>l                              "오른쪽 창으로 이동
+
+let g:SrcExpl_winHeight = 8                      "SrcExpl 윈도우 높이 지정
+
+let g:SrcExpl_refreshTime = 100                 "refreshing time = 100ms
+
+let g:SrcExpl_jumpKey = "<ENTER>"          "해당 definition으로 jump
+
+let g:SrcExpl_gobackKey = "<SPACE>"      "back
+
+let g:SrcExpl_isUpdateTags = 0                 "tag file update = off
+
+"----------------------------------------------------------------------"
+
+" NERD Tree config
+
+"----------------------------------------------------------------------"
+
+let NERDTreeWinPos = "left"                      "NERD Tree위치 = 왼쪽
+
+nmap <F9> :NERDTreeToggle<CR>            "F9 Key = NERD Tree Toggling
+
+----------------------------------------------------------------------------------------------------------------------- 
+
+ 
+
+
+
+
+
+8. 이제 커널 소스의 경로에서 vim 실행, F7, F8, F9를 차례로 입력하면 Tag List, Source Explorer, NERD Tree가 분할되어
+
+   뜨는 것을 확인 할 수 있음
+
+
+
+
+9. Ctrl + h,j,k,l로 분할된 창을 이동할 수 있음, 스페이스바는 이전 소스 위치로 이동
+
+
+
+
+10. cscope사용은 vim명령어로 :cs find s 찾는심볼 입력, 자세한건 cs를 실행하면 옵션에 대한 설명 나옴
+
+
+
+
